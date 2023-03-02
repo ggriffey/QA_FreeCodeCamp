@@ -69,7 +69,7 @@ Browser.site = "localhost:3000";
 suite("Functional Tests with Zombie.js", function () {
   const browser = new Browser();
   suiteSetup(function (done) {
-    return browser.visit("/", done());
+    return browser.visit("/", done);
   });
   suite("Headless browser", function () {
     test('should have a working "site" property', function () {
@@ -97,7 +97,15 @@ suite("Functional Tests with Zombie.js", function () {
 
     // #6
     test('Submit the surname "Vespucci" in the HTML form', function (done) {
-      done();
+      browser.fill("surname", "Vespucci").then(() => {
+        browser.pressButton("submit", () => {
+          browser.assert.success();
+          browser.assert.text("span#name", "Amerigo");
+          browser.assert.text("span#surname", "Vespucci");
+          browser.assert.elements("span#dates", 1);
+          done();
+        });
+      });
     });
   });
 });
